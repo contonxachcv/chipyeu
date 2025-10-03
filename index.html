@@ -104,8 +104,8 @@
       inset:0;
       background:#0d0d1a;
       opacity:0;
-      transition: opacity 1s ease;
       pointer-events:none;
+      transition: opacity 1s ease;
       z-index:999;
     }
 
@@ -147,36 +147,6 @@
       0%,100% { transform:translateX(-50%) translateY(0); }
       50% { transform:translateX(-50%) translateY(-15px); }
     }
-
-    @media screen and (max-width: 480px) {
-      .lantern { width: 140px; }
-      .rope { height: 120px; }
-      .center-text { font-size: 20px; top: 55%; }
-      .hint { font-size: 16px; bottom: 20px; }
-      .arrow-up { bottom: 50px; font-size: 30px; }
-    }
-
-    @media screen and (max-width: 360px) {
-      .lantern-container.left   { left:25%; }
-      .lantern-container.center { left:50%; }
-      .lantern-container.right  { left:75%; }
-      .lantern { width: 120px; }
-      .rope { height: 100px; }
-      .center-text { font-size: 18px; top: 50%; }
-      .hint { font-size: 14px; bottom: 10px; }
-      .arrow-up { bottom: 30px; font-size: 25px; }
-    }
-
-    @media (orientation: landscape) {
-      .center-text { top: 45%; line-height: 1.2; }
-      .arrow-up { bottom: 40px; }
-      .hint { bottom: 20px; }
-      .rope { height: 120px; }
-      .lantern { width: 140px; }
-      .lantern-container.left   { left:20%; }
-      .lantern-container.center { left:50%; }
-      .lantern-container.right  { left:80%; }
-    }
   </style>
 </head>
 <body>
@@ -192,21 +162,21 @@
   <div class="lantern-container left">
     <div class="rope"></div>
     <div class="lantern" data-link="mualongden.html">
-      <img src="./anh/longden1.png" alt="Lồng đèn 1" />
+      <img src="./anh/longden1.png" alt="Lồng đèn 1" onerror="this.style.border='2px solid red'; console.error('Không tìm thấy ảnh longden1.png')" />
     </div>
   </div>
 
   <div class="lantern-container center">
     <div class="rope"></div>
     <div class="lantern" data-link="phaohoa/index2.html">
-      <img src="./anh/longden2.png" alt="Lồng đèn 2" />
+      <img src="./anh/longden2.png" alt="Lồng đèn 2" onerror="this.style.border='2px solid red'; console.error('Không tìm thấy ảnh longden2.png')" />
     </div>
   </div>
 
   <div class="lantern-container right">
     <div class="rope"></div>
     <div class="lantern" data-link="banhtrunthu.html">
-      <img src="./anh/longden3.png" alt="Lồng đèn 3" />
+      <img src="./anh/longden3.png" alt="Lồng đèn 3" onerror="this.style.border='2px solid red'; console.error('Không tìm thấy ảnh longden3.png')" />
     </div>
   </div>
 
@@ -284,19 +254,22 @@
       lantern.addEventListener("click",()=>{
         const targetPage = lantern.getAttribute("data-link");
         fade.style.opacity="1";
+        fade.style.pointerEvents="all";
         setTimeout(()=>{ window.location.href=targetPage; },1000);
       });
     });
 
     // ✅ fix màn hình đen khi quay lại tab
-    window.addEventListener("pageshow", () => {
+    function resetFade(){
       fade.style.opacity = "0";
-    });
+      fade.style.pointerEvents="none";
+    }
+    window.addEventListener("pageshow", resetFade);
     document.addEventListener("visibilitychange", () => {
-      if (!document.hidden) {
-        fade.style.opacity = "0";
-      }
+      if (!document.hidden) resetFade();
     });
+    // reset ngay khi load
+    resetFade();
   </script>
 </body>
 </html>
