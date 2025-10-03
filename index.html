@@ -64,7 +64,7 @@
       animation: bounce 3s ease-in-out infinite;
     }
     .lantern img {
-      width: 25%;
+      width: 50%;
       display:block;
       margin: 0 auto;
       filter: drop-shadow(0 0 25px rgba(255,200,100,0.8))
@@ -80,7 +80,6 @@
       0%,100% { transform:translateY(0);}
       50% { transform:translateY(5px);}
     }
-
 
     .hint {
       position:absolute;
@@ -150,43 +149,33 @@
     }
 
     @media screen and (max-width: 480px) {
-      .lantern {
-        width: 140px;
-      }
-      .rope {
-        height: 120px;
-      }
-      .center-text {
-        font-size: 20px;
-        top: 55%;
-      }
-      .hint {
-        font-size: 16px;
-        bottom: 20px;
-      }
-      .arrow-up {
-        bottom: 50px;
-        font-size: 30px;
-      }
+      .lantern { width: 140px; }
+      .rope { height: 120px; }
+      .center-text { font-size: 20px; top: 55%; }
+      .hint { font-size: 16px; bottom: 20px; }
+      .arrow-up { bottom: 50px; font-size: 30px; }
+    }
+
+    @media screen and (max-width: 360px) {
+      .lantern-container.left   { left:25%; }
+      .lantern-container.center { left:50%; }
+      .lantern-container.right  { left:75%; }
+      .lantern { width: 120px; }
+      .rope { height: 100px; }
+      .center-text { font-size: 18px; top: 50%; }
+      .hint { font-size: 14px; bottom: 10px; }
+      .arrow-up { bottom: 30px; font-size: 25px; }
     }
 
     @media (orientation: landscape) {
-      .center-text {
-        top: 45%;
-        line-height: 1.2;
-      }
-      .arrow-up {
-        bottom: 40px;
-      }
-      .hint {
-        bottom: 20px;
-      }
-      .rope {
-        height: 120px;
-      }
-      .lantern {
-        width: 140px;
-      }
+      .center-text { top: 45%; line-height: 1.2; }
+      .arrow-up { bottom: 40px; }
+      .hint { bottom: 20px; }
+      .rope { height: 120px; }
+      .lantern { width: 140px; }
+      .lantern-container.left   { left:20%; }
+      .lantern-container.center { left:50%; }
+      .lantern-container.right  { left:80%; }
     }
   </style>
 </head>
@@ -203,27 +192,25 @@
   <div class="lantern-container left">
     <div class="rope"></div>
     <div class="lantern" data-link="mualongden.html">
-      <img src="anh/longden1.png" alt="Lồng đèn 1" />
+      <img src="./anh/longden1.png" alt="Lồng đèn 1" />
     </div>
   </div>
-
 
   <div class="lantern-container center">
     <div class="rope"></div>
     <div class="lantern" data-link="phaohoa/index2.html">
-      <img src="anh/longden2.png" alt="Lồng đèn 2" />
+      <img src="./anh/longden2.png" alt="Lồng đèn 2" />
     </div>
   </div>
 
   <div class="lantern-container right">
     <div class="rope"></div>
     <div class="lantern" data-link="banhtrunthu.html">
-      <img src="anh/longden3.png" alt="Lồng đèn 3" />
+      <img src="./anh/longden3.png" alt="Lồng đèn 3" />
     </div>
   </div>
 
   <div class="arrow-up" id="arrow">⬆</div>
-
   <div class="hint" id="hint">Nhấn vào lồng đèn đi </div>
   <div class="fade-out" id="fade"></div>
 
@@ -234,6 +221,7 @@
     const hint=document.getElementById("hint");
     const texts=document.querySelectorAll(".center-text p");
 
+    // tạo sao
     const starContainer=document.getElementById("stars");
     for(let i=0;i<80;i++){
       const star=document.createElement("div");
@@ -244,6 +232,7 @@
       starContainer.appendChild(star);
     }
 
+    // tạo đom đóm
     const fireflyContainer=document.getElementById("fireflies");
     for(let i=0;i<12;i++){
       const fly=document.createElement("div");
@@ -254,7 +243,7 @@
       fireflyContainer.appendChild(fly);
     }
 
- 
+    // hiệu ứng phát sáng ngẫu nhiên
     function randomGlow(lantern){
       setInterval(()=>{
         const blur = Math.floor(Math.random()*40)+20;
@@ -272,6 +261,8 @@
       }, 500 + Math.random()*500);
     }
     lanterns.forEach(randomGlow);
+
+    // hiện text lần lượt
     let index = 0;
     function showText(){
       if(index > 0) texts[index-1].style.opacity=0; 
@@ -288,12 +279,23 @@
     }
     showText();
 
+    // click vào lồng đèn
     document.querySelectorAll(".lantern").forEach(lantern=>{
       lantern.addEventListener("click",()=>{
         const targetPage = lantern.getAttribute("data-link");
         fade.style.opacity="1";
         setTimeout(()=>{ window.location.href=targetPage; },1000);
       });
+    });
+
+    // ✅ fix màn hình đen khi quay lại tab
+    window.addEventListener("pageshow", () => {
+      fade.style.opacity = "0";
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        fade.style.opacity = "0";
+      }
     });
   </script>
 </body>
